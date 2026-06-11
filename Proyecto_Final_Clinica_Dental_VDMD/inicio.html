@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clínica Dental La Casa del Ratón Pérez</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #004a7c 0%, #2964bd 100%);
+      padding: 28px 30px;
+      text-align: center;
+      color: white;
+      border-bottom: 4px solid #00bcd4;
+    }
+    header img { width: 90px; margin-bottom: 10px; }
+    header h1 { font-size: 1.7rem; letter-spacing: 0.5px; }
+    header p  { font-size: 12px; color: #b3d9f2; margin-top: 4px; }
+    .rubrica-banner {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 8px 18px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: #cce8f8;
+      line-height: 1.8;
+    }
+    .rubrica-banner strong { color: white; }
+
+    /* ── NAV ── */
+    nav {
+      background-color: #00bcd4;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 20px;
+      border-bottom: 2px solid #0097a7;
+    }
+    nav button {
+      background: none; border: none;
+      border-bottom: 3px solid transparent;
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.6px;
+      padding: 15px 16px 12px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    nav button:hover  { background: rgba(0,0,0,0.1); }
+    nav button.active { border-bottom-color: white; background: rgba(0,0,0,0.15); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1300px;
+      width: 97%;
+      margin: 28px auto;
+      flex: 1;
+    }
+
+    .tab-content { display: none; flex-direction: column; gap: 22px; }
+    .tab-content.active { display: flex; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(6px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── INICIO ── */
+    .inicio-hero {
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .inicio-img {
+      flex: 1; min-width: 260px; height: 260px;
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,74,124,0.15);
+    }
+    .inicio-img img { width:100%; height:100%; object-fit:cover; }
+    .inicio-texto {
+      flex: 2; min-width: 260px;
+      background: white; padding: 28px; border-radius: 10px;
+      border-left: 4px solid #00bcd4;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      text-align: justify;
+    }
+    .inicio-texto h2 { color: #004a7c; margin-bottom: 12px; font-size: 1.3rem; }
+
+    .inicio-especialidades {
+      background: white; padding: 24px; border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .inicio-especialidades h2 { color: #004a7c; margin-bottom: 14px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .esp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px; margin-top: 10px;
+    }
+    .esp-grid div {
+      background: #f0f9fd; padding: 12px 16px;
+      border-radius: 8px; border-left: 3px solid #00bcd4;
+      font-size: 14px; font-weight: 600; color: #004a7c;
+    }
+
+    .inicio-info {
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .info-card {
+      flex: 1; min-width: 220px;
+      background: white; padding: 22px; border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-top: 3px solid #00bcd4;
+    }
+    .info-card h3 { color: #004a7c; margin-bottom: 10px; font-size: 1rem; }
+    .info-card p  { font-size: 13px; color: #555; line-height: 1.8; }
+
+    /* ── FORMULARIOS ── */
+    .seccion-titulo {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .seccion-titulo h2 { color: #004a7c; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-edit {
+      background: #f59e0b; color: #000;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+      display: none;
+    }
+
+    fieldset {
+      background: white; border: 1px solid #dde6ed;
+      border-radius: 10px; padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    legend {
+      font-weight: 700; color: #004a7c;
+      padding: 0 10px; text-transform: uppercase;
+      font-size: 11px; letter-spacing: 1px;
+    }
+    .grid-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px; margin-top: 12px;
+    }
+    .input-group { display: flex; flex-direction: column; }
+    .input-group label {
+      font-size: 11px; font-weight: 700; color: #666;
+      margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      padding: 9px 12px; border: 1px solid #c8d6e0;
+      border-radius: 6px; font-size: 13px;
+      background: #fafcfe; color: #333;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .input-group input:focus,
+    .input-group select:focus,
+    .input-group textarea:focus { border-color: #00bcd4; outline: none; }
+
+    .form-acciones {
+      display: flex; justify-content: flex-end;
+      gap: 10px; margin-top: 16px;
+    }
+    .btn-submit {
+      background-color: #00bcd4; color: white;
+      border: none; padding: 10px 26px;
+      font-size: 13px; font-weight: 700;
+      border-radius: 6px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover { background-color: #0097a7; }
+    .btn-cancelar {
+      background-color: #94a3b8; color: white;
+      border: none; padding: 10px 22px;
+      font-size: 13px; font-weight: 700;
+      border-radius: 6px; cursor: pointer;
+    }
+    .btn-cancelar:hover { background-color: #64748b; }
+
+    /* ── BÚSQUEDA ── */
+    .barra-busqueda {
+      display: flex; gap: 10px; align-items: center;
+      background: white; padding: 12px 16px;
+      border-radius: 8px; border: 1px solid #dde6ed;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      flex-wrap: wrap;
+    }
+    .barra-busqueda span { font-size: 13px; font-weight: 700; color: #666; white-space: nowrap; }
+    .barra-busqueda select {
+      background: #fafcfe; border: 1px solid #c8d6e0;
+      color: #555; padding: 8px 10px;
+      border-radius: 6px; font-size: 13px; width: auto;
+    }
+    .barra-busqueda input {
+      flex: 1; min-width: 150px;
+      border: 1px solid #c8d6e0; padding: 8px 12px;
+      border-radius: 6px; font-size: 13px; background: #fafcfe;
+    }
+    .barra-busqueda input:focus { border-color: #00bcd4; outline: none; }
+    .btn-limpiar {
+      background: #e2ecf4; color: #555; border: none;
+      padding: 8px 14px; border-radius: 6px; font-size: 13px;
+      font-weight: 600; cursor: pointer;
+    }
+    .btn-limpiar:hover { background: #c8d6e0; }
+    .contador { font-size: 12px; color: #999; white-space: nowrap; }
+
+    /* ── TABLA ── */
+    .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #dde6ed; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
+    th, td { padding: 11px 14px; border-bottom: 1px solid #eaf0f5; text-align: left; }
+    th { background-color: #004a7c; color: white; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    tr:nth-child(even) td { background-color: #f5f9fc; }
+    tr:hover td { background-color: #e8f4fb; }
+    .sin-datos { text-align: center; padding: 30px; color: #999; font-size: 14px; }
+
+    .btn-accion {
+      padding: 5px 11px; font-size: 11px; font-weight: 700;
+      border: none; border-radius: 4px; cursor: pointer; color: white;
+      margin-right: 4px;
+    }
+    .btn-editar   { background: #00bcd4; }
+    .btn-editar:hover { background: #0097a7; }
+    .btn-eliminar { background: #ef4444; }
+    .btn-eliminar:hover { background: #dc2626; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: #004a7c; color: white;
+      padding: 13px 20px; border-radius: 8px;
+      border-left: 4px solid #00bcd4;
+      font-size: 14px; font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      opacity: 0; transform: translateY(10px);
+      transition: all 0.3s ease; pointer-events: none; z-index: 9999;
+    }
+    #toast.show  { opacity: 1; transform: translateY(0); }
+    #toast.error { border-left-color: #ef4444; background: #7f1d1d; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: linear-gradient(135deg, #003a63 0%, #004a7c 100%);
+      padding: 24px 30px; text-align: center; color: white;
+      border-top: 3px solid #00bcd4; margin-top: auto;
+    }
+    footer p { font-size: 13px; color: #b3d9f2; line-height: 1.8; margin: 2px 0; }
+    footer strong { color: white; }
+    footer .clinica { color: #00bcd4; font-size: 15px; font-weight: 700; }
+
+    @media (max-width: 700px) {
+      nav button { font-size: 11px; padding: 12px 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <img src="raton.png" alt="Logo Ratón Pérez"
+       onerror="this.src='https://images.unsplash.com/photo-1588776814546-1ffbb1dc5f0e?auto=format&fit=crop&w=200&q=80'">
+  <h1>Clínica Dental La Casa del Ratón Pérez</h1>
+  <p>Especialistas en tu sonrisa &nbsp;|&nbsp; Ciudad de México</p>
+  <div class="rubrica-banner">
+    <strong>Alumna:</strong> Madrid de la Cruz Valeria Dayna &nbsp;|&nbsp;
+    <strong>Grupo:</strong> 4°J &nbsp;|&nbsp; <strong>No.:</strong> 2408951 &nbsp;|&nbsp;
+    <strong>Materia:</strong> Programación &nbsp;|&nbsp;
+    <strong>Submódulo:</strong> Implementa Base de Datos No Relacionales
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <button class="nav-tab active" onclick="cambiarTab(event,'tab-inicio')">🏠 Inicio</button>
+  <button class="nav-tab" onclick="cambiarTab(event,'tab-pacientes')">👤 Pacientes</button>
+  <button class="nav-tab" onclick="cambiarTab(event,'tab-historial')">📋 Historial Clínico</button>
+  <button class="nav-tab" onclick="cambiarTab(event,'tab-dentistas')">🦷 Dentistas</button>
+  <button class="nav-tab" onclick="cambiarTab(event,'tab-consultorio')">🏥 Consultorio</button>
+</nav>
+
+<main>
+
+  <!-- ══════════════ INICIO ══════════════ -->
+  <div id="tab-inicio" class="tab-content active">
+    <div class="inicio-hero">
+      <div class="inicio-img">
+        <img src="https://clinicadentaltcdental.com/wp-content/uploads/2025/08/clinica-dental-cd-juarez-dentista-cd-juarez-7.jpeg.webp" alt="Clínica dental">
+      </div>
+      <div class="inicio-texto">
+        <h2>Atención Dental Profesional</h2>
+        <p>Bienvenidos a <strong>La Casa del Ratón Pérez</strong>. Somos un centro especializado en el cuidado integral de la salud bucal, donde nuestra prioridad es ofrecer diagnósticos precisos y tratamientos efectivos. Combinamos tecnología de vanguardia con un trato humano excepcional para transformar sonrisas.</p>
+        <br>
+        <p>Nuestro equipo de especialistas certificados está listo para atenderte con el más alto estándar de calidad médica, en un ambiente diseñado para tu máximo confort.</p>
+      </div>
+    </div>
+
+    <div class="inicio-especialidades">
+      <h2>Nuestras Especialidades</h2>
+      <div class="esp-grid">
+        <div>🦷 <strong>Endodoncia:</strong> Tratamientos de conducto</div>
+        <div>🔬 <strong>Periodoncia:</strong> Salud de encías y tejidos</div>
+        <div>🔩 <strong>Implantología:</strong> Implantes de carga inmediata</div>
+        <div>😁 <strong>Ortodoncia:</strong> Brackets y alineadores</div>
+        <div>✨ <strong>Blanqueamiento:</strong> Técnicas profesionales</div>
+        <div>🧒 <strong>Odontopediatría:</strong> Atención infantil especializada</div>
+        <div>📷 <strong>Radiología:</strong> Diagnóstico digital 3D</div>
+        <div>🧹 <strong>Profilaxis:</strong> Limpieza y prevención</div>
+      </div>
+    </div>
+
+    <div class="inicio-info">
+      <div class="info-card">
+        <h3>📍 Ubicación y Horarios</h3>
+        <p><strong>Dirección:</strong> Av. de la Sonrisa Alegre #123, Col. Centro<br>
+           <strong>Teléfono:</strong> (55) 1234-5678<br>
+           <strong>Lun–Vie:</strong> 9:00 AM – 7:00 PM<br>
+           <strong>Sábados:</strong> 9:00 AM – 2:00 PM</p>
+      </div>
+      <div class="info-card">
+        <h3>📢 Avisos</h3>
+        <p>• Campaña de revisión dental gratuita en Junio.<br>
+           • Nuevos horarios de urgencias disponibles.<br>
+           • Citas en línea: sistema activo.<br>
+           • Descuento en ortodoncia este mes.</p>
+      </div>
+      <div class="info-card">
+        <h3>🎯 Nuestra Misión</h3>
+        <p>Brindar salud bucal y bienestar a cada paciente con ética, profesionalismo y tecnología de vanguardia, siempre con un trato humano y personalizado.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ PACIENTES ══════════════ -->
+  <div id="tab-pacientes" class="tab-content">
+    <div class="seccion-titulo">
+      <h2 id="titulo-pac">Registrar Nuevo Paciente</h2>
+      <span id="badge-pac" class="badge-edit">Modo Edición</span>
+    </div>
+    <input type="hidden" id="pac-mongo-id">
+    <fieldset>
+      <legend>Datos del Paciente</legend>
+      <div class="grid-form">
+        <div class="input-group"><label>Número / ID</label><input type="text" id="pac-numero" placeholder="Ej. PAC-001"></div>
+        <div class="input-group"><label>Nombre Completo</label><input type="text" id="pac-nombre" placeholder="Nombre(s) Apellidos"></div>
+        <div class="input-group"><label>Nacimiento / Edad</label><input type="text" id="pac-nacimiento" placeholder="Ej. 15/03/1990 | 34 años"></div>
+        <div class="input-group"><label>Estado Civil / Ocupación</label><input type="text" id="pac-civil" placeholder="Ej. Soltero | Docente"></div>
+        <div class="input-group"><label>Dirección</label><input type="text" id="pac-direccion" placeholder="Calle, Núm., Colonia"></div>
+        <div class="input-group"><label>Datos Médicos</label><input type="text" id="pac-medicos" placeholder="Alergias, enfermedades, etc."></div>
+        <div class="input-group"><label>Contacto de Emergencia</label><input type="text" id="pac-emergencia" placeholder="Nombre y teléfono"></div>
+      </div>
+      <div class="form-acciones">
+        <button type="button" class="btn-cancelar" id="btn-cancel-pac" style="display:none" onclick="cancelarPac()">Cancelar</button>
+        <button type="button" class="btn-submit" onclick="guardarPaciente()">Guardar Paciente</button>
+      </div>
+    </fieldset>
+
+    <div class="barra-busqueda">
+      <span>Buscar:</span>
+      <select id="pac-campo">
+        <option value="todos">Todos los campos</option>
+        <option value="numero">Número</option>
+        <option value="nombre">Nombre</option>
+        <option value="datos_medicos">Datos Médicos</option>
+      </select>
+      <input type="text" id="pac-busq" placeholder="Escribe para filtrar..." oninput="filtrar('pac')">
+      <button class="btn-limpiar" onclick="limpiar('pac')">Limpiar</button>
+      <span class="contador" id="pac-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Número</th><th>Nombre</th><th>Nacimiento/Edad</th><th>Estado Civil/Ocup.</th><th>Dirección</th><th>Datos Médicos</th><th>Emergencia</th><th>Acciones</th></tr></thead>
+        <tbody id="tbody-pac"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════ HISTORIAL CLÍNICO ══════════════ -->
+  <div id="tab-historial" class="tab-content">
+    <div class="seccion-titulo">
+      <h2 id="titulo-his">Crear Registro en Historial Clínico</h2>
+      <span id="badge-his" class="badge-edit">Modo Edición</span>
+    </div>
+    <input type="hidden" id="his-mongo-id">
+    <fieldset>
+      <legend>Datos del Historial Clínico</legend>
+      <div class="grid-form">
+        <div class="input-group"><label>ID Paciente</label><input type="text" id="his-idpac" placeholder="Ej. PAC-001"></div>
+        <div class="input-group"><label>Doctor Responsable</label><input type="text" id="his-doctor" placeholder="Dr./Dra. Nombre"></div>
+        <div class="input-group"><label>Procedimiento</label><input type="text" id="his-proc" placeholder="Ej. Endodoncia, Limpieza"></div>
+        <div class="input-group"><label>Nueva Fecha de Reprogramación</label><input type="date" id="his-reprogram"></div>
+        <div class="input-group"><label>Adeudo Pendiente ($)</label><input type="number" id="his-adeudo" min="0" step="0.01" placeholder="0.00"></div>
+        <div class="input-group"><label>Sala</label><input type="text" id="his-sala" placeholder="Ej. Sala 3"></div>
+        <div class="input-group"><label>Hora de Atención</label><input type="time" id="his-hora"></div>
+        <div class="input-group"><label>Notas del Historial</label><textarea id="his-notas" rows="2" placeholder="Observaciones de la consulta..."></textarea></div>
+      </div>
+      <div class="form-acciones">
+        <button type="button" class="btn-cancelar" id="btn-cancel-his" style="display:none" onclick="cancelarHis()">Cancelar</button>
+        <button type="button" class="btn-submit" onclick="guardarHistorial()">Guardar Historial</button>
+      </div>
+    </fieldset>
+
+    <div class="barra-busqueda">
+      <span>Buscar:</span>
+      <select id="his-campo">
+        <option value="todos">Todos los campos</option>
+        <option value="id_paciente">ID Paciente</option>
+        <option value="doctor_responsable">Doctor</option>
+        <option value="procedimiento">Procedimiento</option>
+        <option value="sala">Sala</option>
+      </select>
+      <input type="text" id="his-busq" placeholder="Escribe para filtrar..." oninput="filtrar('his')">
+      <button class="btn-limpiar" onclick="limpiar('his')">Limpiar</button>
+      <span class="contador" id="his-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID Paciente</th><th>Doctor</th><th>Procedimiento</th><th>Reprogramación</th><th>Adeudo ($)</th><th>Sala</th><th>Hora</th><th>Notas</th><th>Acciones</th></tr></thead>
+        <tbody id="tbody-his"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════ DENTISTAS ══════════════ -->
+  <div id="tab-dentistas" class="tab-content">
+    <div class="seccion-titulo">
+      <h2 id="titulo-den">Registrar Dentista</h2>
+      <span id="badge-den" class="badge-edit">Modo Edición</span>
+    </div>
+    <input type="hidden" id="den-mongo-id">
+    <fieldset>
+      <legend>Datos del Doctor</legend>
+      <div class="grid-form">
+        <div class="input-group"><label>Número / ID</label><input type="text" id="den-numero" placeholder="Ej. DOC-001"></div>
+        <div class="input-group"><label>Nombre del Doctor</label><input type="text" id="den-nombre" placeholder="Dr./Dra. Nombre Apellido"></div>
+        <div class="input-group"><label>Especialidad</label><input type="text" id="den-especialidad" placeholder="Ej. Ortodoncia"></div>
+        <div class="input-group"><label>Horario</label><input type="text" id="den-horario" placeholder="Ej. 9:00 AM - 2:00 PM"></div>
+        <div class="input-group"><label>Formación Académica</label><input type="text" id="den-academica" placeholder="Universidad, título"></div>
+        <div class="input-group"><label>Datos Fiscales (RFC / Cédula)</label><input type="text" id="den-fiscales" placeholder="RFC / Cédula profesional"></div>
+        <div class="input-group"><label>Contacto</label><input type="text" id="den-contacto" placeholder="Teléfono o email"></div>
+      </div>
+      <div class="form-acciones">
+        <button type="button" class="btn-cancelar" id="btn-cancel-den" style="display:none" onclick="cancelarDen()">Cancelar</button>
+        <button type="button" class="btn-submit" onclick="guardarDentista()">Guardar Dentista</button>
+      </div>
+    </fieldset>
+
+    <div class="barra-busqueda">
+      <span>Buscar:</span>
+      <select id="den-campo">
+        <option value="todos">Todos los campos</option>
+        <option value="numero">Número</option>
+        <option value="nombre">Nombre</option>
+        <option value="especialidad">Especialidad</option>
+      </select>
+      <input type="text" id="den-busq" placeholder="Escribe para filtrar..." oninput="filtrar('den')">
+      <button class="btn-limpiar" onclick="limpiar('den')">Limpiar</button>
+      <span class="contador" id="den-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Número</th><th>Nombre</th><th>Especialidad</th><th>Horario</th><th>Académica</th><th>Fiscales</th><th>Contacto</th><th>Acciones</th></tr></thead>
+        <tbody id="tbody-den"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════ CONSULTORIO ══════════════ -->
+  <div id="tab-consultorio" class="tab-content">
+    <div class="seccion-titulo">
+      <h2 id="titulo-con">Registrar Sala / Consultorio</h2>
+      <span id="badge-con" class="badge-edit">Modo Edición</span>
+    </div>
+    <input type="hidden" id="con-mongo-id">
+    <fieldset>
+      <legend>Datos del Consultorio</legend>
+      <div class="grid-form">
+        <div class="input-group"><label>Tipo de Sala</label><input type="text" id="con-tipo" placeholder="Ej. Quirófano, Consultorio 1"></div>
+        <div class="input-group"><label>Estado</label>
+          <select id="con-estado">
+            <option value="">Seleccione...</option>
+            <option value="Disponible">Disponible</option>
+            <option value="Ocupada">Ocupada</option>
+            <option value="En Mantenimiento">En Mantenimiento</option>
+            <option value="Sucia">Sucia</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Equipamiento</label><input type="text" id="con-equip" placeholder="Ej. Unidad Dental, Autoclave"></div>
+        <div class="input-group"><label>Última Limpieza</label><input type="datetime-local" id="con-limpieza"></div>
+        <div class="input-group"><label>Eficiencia Operativa (%)</label><input type="number" id="con-eficiencia" min="0" max="100" placeholder="Ej. 85"></div>
+      </div>
+      <div class="form-acciones">
+        <button type="button" class="btn-cancelar" id="btn-cancel-con" style="display:none" onclick="cancelarCon()">Cancelar</button>
+        <button type="button" class="btn-submit" onclick="guardarConsultorio()">Guardar Consultorio</button>
+      </div>
+    </fieldset>
+
+    <div class="barra-busqueda">
+      <span>Buscar:</span>
+      <select id="con-campo">
+        <option value="todos">Todos los campos</option>
+        <option value="tipo_sala">Tipo Sala</option>
+        <option value="estado">Estado</option>
+        <option value="equipamiento">Equipamiento</option>
+      </select>
+      <input type="text" id="con-busq" placeholder="Escribe para filtrar..." oninput="filtrar('con')">
+      <button class="btn-limpiar" onclick="limpiar('con')">Limpiar</button>
+      <span class="contador" id="con-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tipo Sala</th><th>Estado</th><th>Equipamiento</th><th>Última Limpieza</th><th>Eficiencia (%)</th><th>Acciones</th></tr></thead>
+        <tbody id="tbody-con"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <p class="clinica">Clínica Dental La Casa del Ratón Pérez</p>
+  <p><strong>Alumna:</strong> Madrid de la Cruz Valeria Dayna &nbsp;|&nbsp; <strong>Grupo:</strong> 4°J &nbsp;|&nbsp; <strong>No.:</strong> 2408951</p>
+  <p><strong>Materia:</strong> Programación &nbsp;|&nbsp; <strong>Submódulo:</strong> Implementa Base de Datos No Relacionales</p>
+  <p style="font-size:11px;margin-top:6px;color:#6a9bbf;">2026 © Todos los derechos reservados</p>
+</footer>
+
+<script>
+  const API = 'http://localhost:5000/api';
+
+  // Almacén en memoria para filtrado
+  const DATOS = { pac:[], his:[], den:[], con:[] };
+
+  // Campos de cada colección para búsqueda "todos"
+  const CAMPOS = {
+    pac: ['numero','nombre','nacimiento_edad','estado_civil_ocupacion','direccion','datos_medicos','emergencia'],
+    his: ['id_paciente','doctor_responsable','procedimiento','reprogramacion','adeudo','sala','hora_atencion','notas'],
+    den: ['numero','nombre','especialidad','horario','academica','fiscales','contacto'],
+    con: ['tipo_sala','estado','equipamiento','ultima_limpieza','eficiencia_operativa']
+  };
+
+  // ── Utilidades ──
+  function esc(v) {
+    if (v == null) return '';
+    return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function toast(msg, tipo = 'ok') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = tipo === 'error' ? 'error show' : 'show';
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  function cambiarTab(e, id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (e && e.currentTarget) e.currentTarget.classList.add('active');
+    const mapa = {
+      'tab-pacientes':  cargarPacientes,
+      'tab-historial':  cargarHistorial,
+      'tab-dentistas':  cargarDentistas,
+      'tab-consultorio':cargarConsultorio
+    };
+    if (mapa[id]) mapa[id]();
+  }
+
+  function filtrar(p) {
+    const q  = document.getElementById(`${p}-busq`).value.toLowerCase().trim();
+    const campo = document.getElementById(`${p}-campo`).value;
+    const lista = DATOS[p].filter(item => {
+      if (!q) return true;
+      if (campo === 'todos') return CAMPOS[p].some(c => String(item[c]||'').toLowerCase().includes(q));
+      return String(item[campo]||'').toLowerCase().includes(q);
+    });
+    renderTabla(p, lista);
+    const el = document.getElementById(`${p}-count`);
+    if (el) el.textContent = lista.length === DATOS[p].length
+      ? `${DATOS[p].length} registro(s)`
+      : `${lista.length} de ${DATOS[p].length}`;
+  }
+
+  function limpiar(p) {
+    document.getElementById(`${p}-busq`).value = '';
+    document.getElementById(`${p}-campo`).value = 'todos';
+    filtrar(p);
+  }
+
+  function renderTabla(p, datos) {
+    const tbodies = { pac:'tbody-pac', his:'tbody-his', den:'tbody-den', con:'tbody-con' };
+    const tbody = document.getElementById(tbodies[p]);
+    if (!datos.length) { tbody.innerHTML = `<tr><td colspan="20" class="sin-datos">Sin registros encontrados</td></tr>`; return; }
+    if (p === 'pac') tbody.innerHTML = datos.map(r => `<tr>
+      <td>${esc(r.numero)}</td><td><strong>${esc(r.nombre)}</strong></td>
+      <td>${esc(r.nacimiento_edad)}</td><td>${esc(r.estado_civil_ocupacion)}</td>
+      <td>${esc(r.direccion)}</td><td>${esc(r.datos_medicos)}</td>
+      <td>${esc(r.emergencia)}</td>
+      <td>
+        <button class="btn-accion btn-editar" onclick="editarPac('${esc(r._id)}')">Editar</button>
+        <button class="btn-accion btn-eliminar" onclick="eliminarPac('${esc(r._id)}')">Eliminar</button>
+      </td></tr>`).join('');
+    else if (p === 'his') tbody.innerHTML = datos.map(r => `<tr>
+      <td>${esc(r.id_paciente)}</td><td>${esc(r.doctor_responsable)}</td>
+      <td>${esc(r.procedimiento)}</td><td>${esc(r.reprogramacion)}</td>
+      <td>$${esc(r.adeudo)}</td><td>${esc(r.sala)}</td>
+      <td>${esc(r.hora_atencion)}</td><td>${esc(r.notas)}</td>
+      <td>
+        <button class="btn-accion btn-editar" onclick="editarHis('${esc(r._id)}')">Editar</button>
+        <button class="btn-accion btn-eliminar" onclick="eliminarHis('${esc(r._id)}')">Eliminar</button>
+      </td></tr>`).join('');
+    else if (p === 'den') tbody.innerHTML = datos.map(r => `<tr>
+      <td>${esc(r.numero)}</td><td><strong>${esc(r.nombre)}</strong></td>
+      <td>${esc(r.especialidad)}</td><td>${esc(r.horario)}</td>
+      <td>${esc(r.academica)}</td><td>${esc(r.fiscales)}</td>
+      <td>${esc(r.contacto)}</td>
+      <td>
+        <button class="btn-accion btn-editar" onclick="editarDen('${esc(r._id)}')">Editar</button>
+        <button class="btn-accion btn-eliminar" onclick="eliminarDen('${esc(r._id)}')">Eliminar</button>
+      </td></tr>`).join('');
+    else if (p === 'con') tbody.innerHTML = datos.map(r => `<tr>
+      <td>${esc(r.tipo_sala)}</td><td>${esc(r.estado)}</td>
+      <td>${esc(r.equipamiento)}</td><td>${esc(r.ultima_limpieza)}</td>
+      <td>${esc(r.eficiencia_operativa)}%</td>
+      <td>
+        <button class="btn-accion btn-editar" onclick="editarCon('${esc(r._id)}')">Editar</button>
+        <button class="btn-accion btn-eliminar" onclick="eliminarCon('${esc(r._id)}')">Eliminar</button>
+      </td></tr>`).join('');
+  }
+
+  // ══════════ PACIENTES ══════════
+  async function cargarPacientes() {
+    try {
+      const r = await fetch(`${API}/pacientes`);
+      DATOS.pac = await r.json();
+      filtrar('pac');
+    } catch { toast('Error cargando pacientes','error'); }
+  }
+
+  async function guardarPaciente() {
+    const idM = document.getElementById('pac-mongo-id').value;
+    const payload = {
+      numero:                  document.getElementById('pac-numero').value.trim(),
+      nombre:                  document.getElementById('pac-nombre').value.trim(),
+      nacimiento_edad:         document.getElementById('pac-nacimiento').value.trim(),
+      estado_civil_ocupacion:  document.getElementById('pac-civil').value.trim(),
+      direccion:               document.getElementById('pac-direccion').value.trim(),
+      datos_medicos:           document.getElementById('pac-medicos').value.trim(),
+      emergencia:              document.getElementById('pac-emergencia').value.trim()
+    };
+    try {
+      const url = idM ? `${API}/pacientes/${idM}` : `${API}/pacientes`;
+      const method = idM ? 'PUT' : 'POST';
+      if (idM) {
+        const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+        payload.password = pwd;
+      }
+      const res = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if (res.ok) { toast(idM ? 'Paciente actualizado' : 'Paciente guardado'); cancelarPac(); cargarPacientes(); }
+      else toast('Error al guardar o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+
+  function editarPac(id) {
+    const r = DATOS.pac.find(x => x._id === id); if (!r) return;
+    document.getElementById('pac-mongo-id').value   = r._id;
+    document.getElementById('pac-numero').value     = r.numero||'';
+    document.getElementById('pac-nombre').value     = r.nombre||'';
+    document.getElementById('pac-nacimiento').value = r.nacimiento_edad||'';
+    document.getElementById('pac-civil').value      = r.estado_civil_ocupacion||'';
+    document.getElementById('pac-direccion').value  = r.direccion||'';
+    document.getElementById('pac-medicos').value    = r.datos_medicos||'';
+    document.getElementById('pac-emergencia').value = r.emergencia||'';
+    document.getElementById('titulo-pac').textContent = 'Modificar Paciente';
+    document.getElementById('badge-pac').style.display = 'inline-block';
+    document.getElementById('btn-cancel-pac').style.display = 'inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function cancelarPac() {
+    ['pac-numero','pac-nombre','pac-nacimiento','pac-civil','pac-direccion','pac-medicos','pac-emergencia'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('pac-mongo-id').value = '';
+    document.getElementById('titulo-pac').textContent = 'Registrar Nuevo Paciente';
+    document.getElementById('badge-pac').style.display = 'none';
+    document.getElementById('btn-cancel-pac').style.display = 'none';
+  }
+
+  async function eliminarPac(id) {
+    if (!confirm('¿Eliminar este paciente permanentemente?')) return;
+    const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+    try {
+      const res = await fetch(`${API}/pacientes/${id}`, { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password:pwd}) });
+      if (res.ok) { toast('Paciente eliminado'); cargarPacientes(); }
+      else toast('Error o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+
+  // ══════════ HISTORIAL CLÍNICO ══════════
+  async function cargarHistorial() {
+    try {
+      const r = await fetch(`${API}/historialesClinico`);
+      DATOS.his = await r.json();
+      filtrar('his');
+    } catch { toast('Error cargando historial','error'); }
+  }
+
+  async function guardarHistorial() {
+    const idM = document.getElementById('his-mongo-id').value;
+    const payload = {
+      id_paciente:        document.getElementById('his-idpac').value.trim(),
+      doctor_responsable: document.getElementById('his-doctor').value.trim(),
+      procedimiento:      document.getElementById('his-proc').value.trim(),
+      reprogramacion:     document.getElementById('his-reprogram').value.trim(),
+      adeudo:             document.getElementById('his-adeudo').value.trim(),
+      sala:               document.getElementById('his-sala').value.trim(),
+      hora_atencion:      document.getElementById('his-hora').value.trim(),
+      notas:              document.getElementById('his-notas').value.trim()
+    };
+    try {
+      const url = idM ? `${API}/historialesClinico/${idM}` : `${API}/historialesClinico`;
+      const method = idM ? 'PUT' : 'POST';
+      if (idM) {
+        const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+        payload.password = pwd;
+      }
+      const res = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if (res.ok) { toast(idM ? 'Historial actualizado' : 'Historial guardado'); cancelarHis(); cargarHistorial(); }
+      else toast('Error al guardar o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+
+  function editarHis(id) {
+    const r = DATOS.his.find(x => x._id === id); if (!r) return;
+    document.getElementById('his-mongo-id').value  = r._id;
+    document.getElementById('his-idpac').value     = r.id_paciente||'';
+    document.getElementById('his-doctor').value    = r.doctor_responsable||'';
+    document.getElementById('his-proc').value      = r.procedimiento||'';
+    document.getElementById('his-reprogram').value = r.reprogramacion||'';
+    document.getElementById('his-adeudo').value    = r.adeudo||'';
+    document.getElementById('his-sala').value      = r.sala||'';
+    document.getElementById('his-hora').value      = r.hora_atencion||'';
+    document.getElementById('his-notas').value     = r.notas||'';
+    document.getElementById('titulo-his').textContent = 'Modificar Historial';
+    document.getElementById('badge-his').style.display = 'inline-block';
+    document.getElementById('btn-cancel-his').style.display = 'inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function cancelarHis() {
+    ['his-idpac','his-doctor','his-proc','his-reprogram','his-adeudo','his-sala','his-hora','his-notas'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('his-mongo-id').value = '';
+    document.getElementById('titulo-his').textContent = 'Crear Registro en Historial Clínico';
+    document.getElementById('badge-his').style.display = 'none';
+    document.getElementById('btn-cancel-his').style.display = 'none';
+  }
+
+  async function eliminarHis(id) {
+    if (!confirm('¿Eliminar este registro permanentemente?')) return;
+    const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+    try {
+      const res = await fetch(`${API}/historialesClinico/${id}`, { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password:pwd}) });
+      if (res.ok) { toast('Historial eliminado'); cargarHistorial(); }
+      else toast('Error o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+
+  // ══════════ DENTISTAS ══════════
+  async function cargarDentistas() {
+    try {
+      const r = await fetch(`${API}/doctores`);
+      DATOS.den = await r.json();
+      filtrar('den');
+    } catch { toast('Error cargando dentistas','error'); }
+  }
+
+  async function guardarDentista() {
+    const idM = document.getElementById('den-mongo-id').value;
+    const payload = {
+      numero:      document.getElementById('den-numero').value.trim(),
+      nombre:      document.getElementById('den-nombre').value.trim(),
+      especialidad:document.getElementById('den-especialidad').value.trim(),
+      horario:     document.getElementById('den-horario').value.trim(),
+      academica:   document.getElementById('den-academica').value.trim(),
+      fiscales:    document.getElementById('den-fiscales').value.trim(),
+      contacto:    document.getElementById('den-contacto').value.trim()
+    };
+    try {
+      const url = idM ? `${API}/doctores/${idM}` : `${API}/doctores`;
+      const method = idM ? 'PUT' : 'POST';
+      if (idM) {
+        const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+        payload.password = pwd;
+      }
+      const res = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if (res.ok) { toast(idM ? 'Dentista actualizado' : 'Dentista guardado'); cancelarDen(); cargarDentistas(); }
+      else toast('Error al guardar o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+
+  function editarDen(id) {
+    const r = DATOS.den.find(x => x._id === id); if (!r) return;
+    document.getElementById('den-mongo-id').value    = r._id;
+    document.getElementById('den-numero').value      = r.numero||'';
+    document.getElementById('den-nombre').value      = r.nombre||'';
+    document.getElementById('den-especialidad').value= r.especialidad||'';
+    document.getElementById('den-horario').value     = r.horario||'';
+    document.getElementById('den-academica').value   = r.academica||'';
+    document.getElementById('den-fiscales').value    = r.fiscales||'';
+    document.getElementById('den-contacto').value    = r.contacto||'';
+    document.getElementById('titulo-den').textContent = 'Modificar Dentista';
+    document.getElementById('badge-den').style.display = 'inline-block';
+    document.getElementById('btn-cancel-den').style.display = 'inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function cancelarDen() {
+    ['den-numero','den-nombre','den-especialidad','den-horario','den-academica','den-fiscales','den-contacto'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('den-mongo-id').value = '';
+    document.getElementById('titulo-den').textContent = 'Registrar Dentista';
+    document.getElementById('badge-den').style.display = 'none';
+    document.getElementById('btn-cancel-den').style.display = 'none';
+  }
+
+  async function eliminarDen(id) {
+    if (!confirm('¿Eliminar este dentista permanentemente?')) return;
+    const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+    try {
+      const res = await fetch(`${API}/doctores/${id}`, { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password:pwd}) });
+      if (res.ok) { toast('Dentista eliminado'); cargarDentistas(); }
+      else toast('Error o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+
+  // ══════════ CONSULTORIO ══════════
+  async function cargarConsultorio() {
+    try {
+      const r = await fetch(`${API}/consultorios`);
+      DATOS.con = await r.json();
+      filtrar('con');
+    } catch { toast('Error cargando consultorios','error'); }
+  }
+
+  async function guardarConsultorio() {
+    const idM = document.getElementById('con-mongo-id').value;
+    const payload = {
+      tipo_sala:            document.getElementById('con-tipo').value.trim(),
+      estado:               document.getElementById('con-estado').value.trim(),
+      equipamiento:         document.getElementById('con-equip').value.trim(),
+      ultima_limpieza:      document.getElementById('con-limpieza').value.trim(),
+      eficiencia_operativa: document.getElementById('con-eficiencia').value.trim()
+    };
+    try {
+      const url = idM ? `${API}/consultorios/${idM}` : `${API}/consultorios`;
+      const method = idM ? 'PUT' : 'POST';
+      if (idM) {
+        const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+        payload.password = pwd;
+      }
+      const res = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if (res.ok) { toast(idM ? 'Consultorio actualizado' : 'Consultorio guardado'); cancelarCon(); cargarConsultorio(); }
+      else toast('Error al guardar o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+
+  function editarCon(id) {
+    const r = DATOS.con.find(x => x._id === id); if (!r) return;
+    document.getElementById('con-mongo-id').value  = r._id;
+    document.getElementById('con-tipo').value      = r.tipo_sala||'';
+    document.getElementById('con-estado').value    = r.estado||'';
+    document.getElementById('con-equip').value     = r.equipamiento||'';
+    document.getElementById('con-limpieza').value  = r.ultima_limpieza||'';
+    document.getElementById('con-eficiencia').value= r.eficiencia_operativa||'';
+    document.getElementById('titulo-con').textContent = 'Modificar Consultorio';
+    document.getElementById('badge-con').style.display = 'inline-block';
+    document.getElementById('btn-cancel-con').style.display = 'inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function cancelarCon() {
+    ['con-tipo','con-estado','con-equip','con-limpieza','con-eficiencia'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('con-mongo-id').value = '';
+    document.getElementById('titulo-con').textContent = 'Registrar Sala / Consultorio';
+    document.getElementById('badge-con').style.display = 'none';
+    document.getElementById('btn-cancel-con').style.display = 'none';
+  }
+
+  async function eliminarCon(id) {
+    if (!confirm('¿Eliminar este consultorio permanentemente?')) return;
+    const pwd = prompt('Contraseña de administrador:'); if (!pwd) return;
+    try {
+      const res = await fetch(`${API}/consultorios/${id}`, { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password:pwd}) });
+      if (res.ok) { toast('Consultorio eliminado'); cargarConsultorio(); }
+      else toast('Error o contraseña incorrecta','error');
+    } catch { toast('Error de conexión','error'); }
+  }
+</script>
+</body>
+</html>
